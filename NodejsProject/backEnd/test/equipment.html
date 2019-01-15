@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<script src="js/common/socket.io-1.3.5.js" type="text/javascript"></script>
+		<script src="js/jquery 3.2.1/jquery-3.2.1.js" type="text/javascript"></script>
+		<title>盯着看</title>
+	</head>
+
+	<body>
+		<span id="1"></span>
+	</body>
+	<script>
+		//连接websocket后端服务器
+		//http://www.wonderlabsstudio.com:3000/
+		this.socket = io.connect('http://192.168.100.120:3000/', {
+			transports: ["websocket"]
+		});
+
+		setInterval("refresh();", 30000);
+
+		function refresh() {
+			socket.emit("connectCheck");
+			//socket2.emit("connectCheck");
+		}
+
+		socket.on("connectCheckCB", function(data) {
+			console.log(data);
+			$("#" + data.id).html(data.lastTime);
+
+		});
+		refresh();
+	</script>
+
+</html>

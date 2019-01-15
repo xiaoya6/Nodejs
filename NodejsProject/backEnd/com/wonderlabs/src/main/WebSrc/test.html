@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<LINK REL='SHORTCUT ICON' HREF='./img/favicon.ico'>
+		<script src="js/common/socket.io-1.3.5.js" type="text/javascript"></script>
+		<script src="js/jquery 3.2.1/jquery-3.2.1.js" type="text/javascript"></script>
+		<title>阿迪达斯测试</title>
+		<style>
+			body {
+				width: 100%;
+				background-color: black;
+				color: white;
+				margin: 0px;
+			}
+			
+			div {
+				margin: 3px;
+			}
+			
+			select {
+				height: 30px;
+				min-width: 150px;
+				line-height: 30px;
+				border: 1px solid #e6e6e6;
+				background-color: #fff;
+				border-radius: 2px;
+			}
+			
+			#download {
+				height: 30px;
+				min-width: 150px;
+				line-height: 30px;
+				border: 1px solid deepskyblue;
+				background-color: deepskyblue;
+				border-radius: 2px;
+			}
+			
+			button {
+				height: 30px;
+				min-width: 145px;
+				line-height: 30px;
+				border: 1px solid deepskyblue;
+				background-color: deepskyblue;
+				border-radius: 2px;
+			}
+			
+			#chooseLogDate {
+				height: 27px;
+				min-width: 200px;
+				line-height: 26px;
+				border: 1px solid #e6e6e6;
+				background-color: #FFFFFF;
+				border-radius: 2px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<script>
+			function hideFz() {
+				$("#fzby").hide();
+			}
+		</script>
+		<img id="fzby" src="img/fzby2.jpg" style="float: right; width: 30%; box-shadow:0 0 300px rgba(255, 150, 0, 0.85);border-radius: 15px; " onclick="hideFz();" />
+		<div id="header">
+			<img src="img/adi_logo.png" width="8%" height="auto" />
+			<img src="http://www.auditoire.com/wp-content/themes/anonymous/library/svg/logo-orange.png" style="width: 12%;" />
+			<img src="img/logo.png" width="10%" height="auto" />
+			<img src="https://qiniu.woaap.com/etocrm/v2/img/logo.png" style="width: 8%;" />
+
+		</div>
+		<div class="row">
+				<div class="col-10">
+				</div>
+				<div class="col-2">
+					<a href="/main" class="btn btn-info">
+						<<返回首页</a>
+				</div>
+			</div>
+		<!--<div>
+			<h2><span class="little-title">发送外部链接测试用</h2>
+			<div>回调消息：
+				<div id="span1" style="width: 100%;"></div>
+			</div>
+			<div>
+				<textarea id="textarea1" style="width: 720px;height: auto;">[{"UnionId":"jssssb","SignId":4,"Level":1,"Point":3,"MediaPath":"https://MediaPath.mp4"}]</textarea>
+			</div>
+			<button id="btn2" onclick="btnFunc1();">测试</button>
+
+		</div>-->
+
+		<div>
+			<h2><span class="little-title">发送内部链接测试用</span></h2>
+			<div>
+				<div>接口URL：</div>
+				<textarea id="span2" style="width: 720px;height: 120px;" readonly="readonly"></textarea>
+			</div>
+			<div>
+				<label><span style="color: red; ">请选择活动类型:</span></label>
+				<select id="select0" onchange="gameModeChange();">
+					<option value="篮球">篮球</option>
+					<option value="足球">足球</option>
+					<option value="跑步">跑步</option>
+					<option value="攀岩">攀岩</option>
+					<option value="二人划艇">二人划艇</option>
+					<option value="四人划艇">四人划艇</option>
+					<option value="A.I.R. Pledge">A.I.R. Pledge</option>
+					<option value="创造者档案">创造者档案</option>
+					<option value="miadidas">miadidas</option>
+				</select>
+				<select id="select02" onchange="gameModeChange();">
+					<option value="上海市">上海</option>
+					<option value="成都市">成都</option>
+					<option value="广州市">广州</option>
+					<option value="北京市">北京</option>
+					<option value="南京市">南京</option>
+					<option value="武汉市">武汉</option>
+					<option value="沈阳市">沈阳</option>
+					<option value="深圳市">深圳</option>
+				</select>
+				<button id="btn1" onclick="gameModeChange(); ">重新生成数据</button>
+				<button id="btn2 " onclick="btnFunc2(); ">生成接口URL</button>
+			</div>
+			<div>
+				<textarea id="textarea2" style="width: 720px;height: 100px; "></textarea>
+			</div>
+		</div>
+		<!--<div>
+			<h2><span class="little-title ">清空某活动的所有上机状态</span></h2>
+			<select id="select1">
+				<option value="篮球">篮球</option>
+				<option value="足球">足球</option>
+				<option value="跑步">跑步</option>
+				<option value="攀岩">攀岩</option>
+				<option value="训练">训练</option>
+				<option value="A.I.R. Pledge">A.I.R. Pledge</option>
+			</select>
+			<button id="btn3" onclick="btnFunc3(); ">清空上机状态</button>
+		</div>-->
+	</body>
+	<script>
+		var btnFunc1 = function() {
+			console.log("1---------------------->");
+			var data = {
+				t: JSON.parse($("#textarea1").val())
+			};
+			$("#span1").html("请求中,,,,");
+			socket.emit('message', data);
+		}
+		var btnFunc2 = function() {
+			console.log("2---------------------->");
+			if(jsonString != "") {
+				var data = {
+					t: JSON.parse($("#textarea2").val())
+				};
+				$("#span2").html("请求中,,,,");
+				socket.emit('testChangeData', data);
+			} else {
+				alert("生成内容不能为空！！！！！");
+			}
+
+		}
+		var btnFunc3 = function() {
+			console.log("3---------------------->");
+			if(confirm("是否清除所有" + $("#select1").val() + "设备的上机状态？")) {
+				var data = {
+					campaign: $("#select1").val()
+				};
+				socket.emit('TestUpdateClearSameCampaignUsing', data);
+			}
+		};
+		var jsonString = "";
+		var userNameArray = ["路西法", "帕吉", "提莫", "地主傻儿子", "地主粑粑", "关羽", "金刚狼",
+			"万磁王", "蝙蝠侠", "美国队长", "北极星", "小猪佩奇", "皮卡丘", "红莲骑士兽", "周星驰", 
+			"科比布莱恩特", "蒙奇迪路飞", "伊利丹怒风", "战神", "保罗沃克", "令狐冲", "漩涡鸣人", 
+			"特里", "老虎伍兹", "麦克舒马赫", "火星哥", "霉霉", "贾斯丁比吧", "哈利波特","田馥甄",
+			"主宰","蜘蛛侠","超人","乔丹","哈登","贝吉塔","死神","娃哈哈","大傻子","山炮","棒槌"
+		];
+		var unionIdArray = ["luxifa", "puggy", "timo", "jiangshuaishuai", "chuxiaosong", "guanyu", "wolf",
+			"zeo", "batMan", "captain", "star", "peky", "pikachu", "knight", "zhouxingxing", 
+			"kobe", "monkey", "yilidan", "god", "paul", "linghu", "naruto",
+			"terry", "tiger", "michal", "mars", "taylor", "JB", "botter","hebe",
+			"jugg","spiderMan","superMan","jordan","harden","vegeta","blench","wahaha","Jss","laowu","wuyancan"
+		];
+		var gameModeChange = function() {
+			console.log($("#select0").val());
+			var mode = $("#select0").val();
+			console.log($("#select02").val());
+			var city = $("#select02").val();
+			if(mode == "二人划艇") {
+				var index1 = parseInt(Math.random() * (userNameArray.length - 1));
+				var index2 = parseInt(Math.random() * (userNameArray.length - 1));
+				jsonString = "[{\"UnionId\":\"" + unionIdArray[index1] + "\",\"UserName\":\"" + userNameArray[index1] + "\",\"SignId\":" + parseInt(Math.random() * 150) + ",\"Campaign\":\"" + mode + "\",\"City\":\"" + city + "\",\"CurLevel\":1},{\"UnionId\":\"" +
+					unionIdArray[index2] + "\",\"UserName\":\"" + userNameArray[index2] + "\",\"SignId\":" + parseInt(Math.random() * 150) + ",\"Campaign\":\"" + mode + "\",\"City\":\"" + city + "\",\"CurLevel\":1}]";
+				$("#textarea2").html(jsonString);
+			} else if(mode == "四人划艇") {
+				var index1 = parseInt(Math.random() * (userNameArray.length - 1));
+				var index2 = parseInt(Math.random() * (userNameArray.length - 1));
+				var index3 = parseInt(Math.random() * (userNameArray.length - 1));
+				var index4 = parseInt(Math.random() * (userNameArray.length - 1));
+				jsonString = "[{\"UnionId\":\"" + unionIdArray[index1] + "\",\"UserName\":\"" + userNameArray[index1] + "\",\"SignId\":" + parseInt(Math.random() * 150) + ",\"Campaign\":\"" + mode + "\",\"City\":\"" + city + "\",\"CurLevel\":1},{\"UnionId\":\"" +
+					unionIdArray[index2] + "\",\"UserName\":\"" + userNameArray[index2] + "\",\"SignId\":" + parseInt(Math.random() * 150) + ",\"Campaign\":\"" + mode + "\",\"City\":\"" + city + "\",\"CurLevel\":1},{\"UnionId\":\"" + unionIdArray[index3] +
+					"\",\"UserName\":\"" + userNameArray[index3] + "\",\"SignId\":" + parseInt(Math.random() * 150) + ",\"Campaign\":\"" + mode + "\",\"City\":\"" + city + "\",\"CurLevel\":1},{\"UnionId\":\"" + unionIdArray[index4] + "\",\"UserName\":\"" +
+					userNameArray[index4] + "\",\"SignId\":" + parseInt(Math.random() * 150) + ",\"Campaign\":\"" + mode + "\",\"City\":\"" + city + "\",\"CurLevel\":1}]";
+				$("#textarea2").html(jsonString);
+			} else {
+				var index1 = parseInt(Math.random() * (userNameArray.length - 1));
+				jsonString = "[{\"UnionId\":\"" + unionIdArray[index1] + "\",\"UserName\":\"" + userNameArray[index1] + "\",\"SignId\":" + parseInt(Math.random() * 150) + ",\"Campaign\":\"" + mode + "\",\"City\":\"" + city + "\",\"CurLevel\":1}]";
+				$("#textarea2").html(jsonString);
+			}
+			//console.log(jsonString);
+		};
+		gameModeChange();
+
+		function jsoncallback(data) {
+			console.log(data);
+		}
+		//连接websocket后端服务器
+		//http://www.wonderlabsstudio.com:3000/
+		this.socket = io.connect('http://www.wonderlabsstudio.com:3000/', {
+			transports: ["websocket"]
+		});
+		var id = 0;
+		socket.on("hello", function(data) {
+			console.log(data);
+			if(data) {
+				$("#span1").html(data);
+			}
+
+		});
+		socket.on("rename", function(data) {
+			id = data.socket;
+			console.log();
+		});
+		//测试用
+		socket.on("textForHttpData", function(data) {
+			console.log(data);
+			$("#span2").html(data);
+
+		});
+		socket.on("testShowInfo", function(data) {
+			console.log(data);
+			$("#span3").html(JSON.stringify(data.data));
+
+		});
+		socket.on("TestUpdateClearSameCampaignUsingCB", function(data) {
+			console.log(data);
+			$("#span4").html(JSON.stringify(data.data));
+
+		});
+
+	</script>
+
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>BUG管理</title>
+		<LINK REL='SHORTCUT ICON' HREF='../img/favicon.ico'>
+		<link rel="stylesheet" href="../common/bootstrap/css/bootstrap.min.css" />
+		<script type="text/javascript" src="../common/jquery/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="../common/bootstrap/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="../css/bugManagement.css" />
+
+	</head>
+
+	<body style="font-size: large;">
+		<div class="logo-header">
+			<img src="../img/logo.png" />
+		</div>
+		<div id="main" class="container_list">
+			<h1 style="font-size: xx-large; margin-bottom:3%;">BUG管理</h1>
+			<div id="params" style="width: 100%">
+				<table>
+					<tbody>
+						<colgroup>
+							<col class="th_col_1" />
+							<col class="th_col_3" />
+							<col class="th_col_1" />
+							<col class="th_col_3" />
+							<col class="th_col_1" />
+							<col class="th_col_3" />
+							<col class="th_col_1" />
+							<col class="th_col_3" />
+							<col class="th_col_2" />
+						</colgroup>
+						<tr>
+							<th>
+								<label>类型</label>
+							</th>
+							<th>
+								<select id="bug_type">
+									<option label="" value=" "></option>
+									<option label="UI异常" value="0">0</option>
+									<option label="功能异常" value="1">1</option>
+									<option label="性能异常" value="2">2</option>
+									<option label="其他异常" value="9">9</option>
+								</select>
+							</th>
+							<th>
+								<label>级别</label>
+							</th>
+							<th>
+								<select id="bug_level">
+									<option label="" value=" "></option>
+									<option label="低优先" value="0">
+										<0/option>
+											<option label="中优先" value="1">1</option>
+											<option label="高优先" value="2">2</option>
+											<option label="严重" value="3">3</option>
+
+								</select>
+							</th>
+							<th>
+								<label>状态</label>
+							</th>
+							<th>
+								<select id="bug_state" disabled="disabled">
+									<option label="" value=" "></option>
+									<option label="待解决" value="0">0</option>
+									<option label="解决中" value="1">1</option>
+									<option label="待确认" value="2">2</option>
+									<option label="解决" value="3">2</option>
+									<option label="作废" value="9">9</option>
+								</select>
+							</th>
+							<th>
+								<button id="selectList" class="btn btn-info" onclick="selectForTable();">检 索</button>
+								<button id="create-new-bug-btn" class="btn btn-info" onclick="CreateBugModal();">新 建</button>
+							</th>
+						</tr>
+					</tbody>
+			</div>
+
+			<table id="bugTable" border="1" class="row">
+				<colgroup>
+					<col class="th_col_1" />
+					<col class="th_col_2" />
+					<col class="th_col_1" />
+					<col class="th_col_1" />
+					<col class="th_col_1" />
+					<col class="th_col_4" />
+					<!--<col class="th_col_2" />-->
+					<col class="th_col_4" />
+					<col class="th_col_1" />
+					<!--<col class="th_col_1" />
+						<col class="th_col_2" />
+						<col class="th_col_1" />
+						<col class="th_col_2" />-->
+				</colgroup>
+				<thead>
+					<tr>
+						<th>BUG编号</th>
+						<th>BUG名称</th>
+						<th>类型</th>
+						<th>级别</th>
+						<th>频率</th>
+						<th>描述</th>
+						<!--<th>定位</th>-->
+						<th>原因</th>
+						<th>状态</th>
+						<!--<th>发现者</th>
+							<th>发现日期</th>
+							<th>解决者</th>
+							<th>解决日期</th>-->
+					</tr>
+				</thead>
+				<tbody id="record">
+
+				</tbody>
+			</table>
+		</div>
+
+		<!-- 模态框（Modal） -->
+		<div class="modal fade modal-hidden" id="bug-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myModalLabel">
+						BUG详情
+				</h4>
+					</div>
+					<div class="modal-body input-group">
+						<label id="detail-id">编  号: 
+							<span id="modal-id" ></span></label>
+						<label>名  称: 
+							<input id="modal-name" type="text"/></label>
+						<label>类  型: 
+							<select id="modal-type">
+								<option label="UI异常" value="0">0</option>
+								<option label="功能异常" value="1">1</option>
+								<option label="性能异常" value="2">2</option>
+								<option label="其他异常" value="9">9</option>
+							</select>
+						</label>
+
+						<label>级  别: 
+							<select id="modal-level">
+								<option label="低优先" value="0">0</option>
+								<option label="中优先" value="1">1</option>
+								<option label="高优先" value="2">2</option>
+								<option label="严重" value="3">3</option>
+							</select>
+						</label>
+
+						<label>状  态: 
+							<select id="modal-state">
+								<option label="待解决" value="0">0</option>
+								<option label="解决中" value="1">1</option>
+								<option label="待确认" value="2">2</option>
+								<option label="解决" value="3">3</option>
+								<option label="作废" value="9">9</option>
+							</select>
+						</label>
+						<label>频  率: 	
+							<select id="modal-frequency">
+								<option label="个别" value="0">0</option>
+								<option label="偶尔" value="1">1</option>
+								<option label="经常" value="2">2</option>
+								<option label="极其频繁" value="3">3</option>
+							</select>
+						</label>
+
+						<label>描  述: 
+							<textarea id="modal-description" rows="3" cols="50"></textarea>
+						</label>
+						<label>定  位: 
+							<input id="modal-position"  type="text"/>
+						</label>
+						<label>原  因: 
+							<textarea id="modal-reason" rows="3" cols="50"></textarea>
+						</label>
+						<label>测 试: 
+							<input id="modal-test" type="text"/>
+						</label>
+						<label>开 发: 
+							<input id="modal-developer" type="text"/>
+						</label>
+						<label id="label-create">发 现: 
+							<span id="modal-create-time"></span>
+						</label>
+						<label id="label-resolve">解 决: 
+							<span id="modal-resolve-time"></span>
+						</label>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+						<button type="button" class="btn btn-primary" onclick="submitBtn();">
+					提交更改
+				</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
+	</body>
+	<script>
+		var modalId;
+		//检索
+		function selectForTable() {
+			var urlPath = '/getBUGList';
+			var bug_type = $("#bug_type").find("option:selected").val();
+			var bug_level = $("#bug_level").find("option:selected").val();
+
+			if(bug_type.trim() != '') {
+				urlPath += "?type=" + bug_type;
+				if(bug_level.trim() != '') {
+					urlPath += "&level=" + bug_level;
+				}
+			} else {
+				if(bug_level.trim() != '') {
+					urlPath += "?level=" + bug_level;
+				}
+			}
+			console.log('urlPath:' + urlPath);
+			$.ajax({
+				type: "get",
+				url: urlPath,
+				dataType: "json",
+				success: function(data) {
+					$("#record").children().remove();
+					console.log(data.message);
+					if(data.data) {
+						//console.log(data.data);
+						var list = JSON.stringify(data.data);
+						$.each(data.data, function(infoIndex, info) {
+							var logMessage = "<tr " + (info["bug_state"] == 3 || info["bug_state"] == '3' || info["bug_state"] == 9 || info["bug_state"] == '9' ? "style=\"background-color: gainsboro;\"" : "") +
+								" class = \"bug-id\"><td id=" + info["bug_id"] + "> <a href =\"#\" onclick =\"GetBugInfoModal(" + info["bug_id"] + ");\"  >" + info["bug_id"] + "</a>" +
+								"</td><td>" + info["bug_name"] + "</td><td>" + TypeFormat(info["bug_type"]) + "</td><td>" + LevelFormat(info["bug_level"]) +
+								"</td><td>" + FrequencyFormat(info["bug_frequency"]) + "</td><td>" + info["bug_description"] +
+								//"</td><td>" + info["bug_position"] +
+								"</td><td>" + info["bug_reason"] + "</td><td>" + StateFormat(info["bug_state"]) +
+								//"</td><td>" + info["bug_created_worker"] +"</td><td>" + DateTimeFormat(info["bug_created_time"]) + 
+								//"</td><td>" + info["bug_resolve_worker"] +"</td><td>" + DateTimeFormat(info["bug_resolve_time"]) + 
+								"</td></tr>";
+							$("#record").append(logMessage);
+						});
+						//成功提示
+						success_prompt(data.message, 3000);
+					} else {
+						//失败提示
+						fail_prompt(data.message, 3000);
+					}
+				}
+			});
+		}
+		//检索
+		function selectById(id) {
+			var urlPath = '/getBUGInfo?id=' + id;
+			$.ajax({
+				type: "get",
+				url: urlPath,
+				dataType: "json",
+				success: function(data) {
+					if(data.success) {
+						var state = data.data[0].bug_state;
+						$("#modal-test").attr("disabled", "disabled");
+						$("#modal-developer").attr("disabled", "disabled");
+						if(state == 3 || state == '3' || state == 9 || state == '9') {
+							$("#modal-name").attr("disabled", "disabled");
+							$("#modal-position").attr("disabled", "disabled");
+							$("#modal-reason").attr("disabled", "disabled");
+							$("#modal-description").attr("disabled", "disabled");
+							$("#modal-type").attr("disabled", "disabled");
+							$("#modal-state").attr("disabled", "disabled");
+							$("#modal-level").attr("disabled", "disabled");
+							$("#modal-frequency").attr("disabled", "disabled");
+
+						} else {
+							$("#modal-name").removeAttr("disabled");
+							$("#modal-position").removeAttr("disabled");
+							$("#modal-reason").removeAttr("disabled");
+							$("#modal-description").removeAttr("disabled");
+							$("#modal-type").removeAttr("disabled");
+							$("#modal-state").removeAttr("disabled");
+							$("#modal-level").removeAttr("disabled");
+							$("#modal-frequency").removeAttr("disabled");
+						}
+						$("#modal-name").val(data.data[0].bug_name);
+						$("#modal-position").val(data.data[0].bug_position);
+						$("#modal-reason").val(data.data[0].bug_reason);
+						$("#modal-description").val(data.data[0].bug_description);
+						$("#modal-test").val(data.data[0].bug_created_worker);
+						$("#modal-developer").val(data.data[0].bug_resolve_worker);
+						$("#modal-create-time").html(DateTimeFormat(data.data[0].bug_created_time));
+						$("#modal-resolve-time").html(DateTimeFormat(data.data[0].bug_resolve_time));
+						setSelectChecked("modal-type", data.data[0].bug_type);
+						setSelectChecked("modal-state", data.data[0].bug_state);
+						setSelectChecked("modal-level", data.data[0].bug_level);
+						setSelectChecked("modal-frequency", data.data[0].bug_frequency);
+
+						//成功提示
+						console.log(data.message);
+						success_prompt(data.message, 3000);
+					} else {
+						//失败提示
+						console.log(data.message);
+						fail_prompt(data.message, 3000);
+					}
+				}
+			});
+		}
+
+		//提交按钮
+		function submitBtn() {
+			if($("h4").html() == "BUG详情") {
+				updateById(modalId);
+			} else {
+				insertNewBug();
+			}
+
+		}
+
+		//新增数据
+		function insertNewBug() {
+			var bug_name = $("#modal-name").val();
+			var bug_position = $("#modal-position").val();
+			var bug_reason = $("#modal-reason").val();
+			var bug_description = $("#modal-description").val();
+			var bug_type = $("#modal-type").val();
+			var bug_state = $("#modal-state").val();
+			var bug_level = $("#modal-level").val();
+			var bug_frequency = $("#modal-frequency").val();
+			var bug_test = $("#modal-test").val();
+			var bug_developer = $("#modal-developer").val();
+			var urlPath = '/createBUGInfo?name=' + bug_name + '&position=' + bug_position + '&reason=' +
+				bug_reason + '&description=' + bug_description + '&type=' + bug_type + '&state=' + bug_state + '&level=' +
+				bug_level + '&frequency=' + bug_frequency + '&test=' + bug_test + '&developer=' + bug_developer;
+			$.ajax({
+				type: "get",
+				url: urlPath,
+				dataType: "json",
+				success: function(data) {
+					if(data.success) {
+						console.log(data.message);
+						success_prompt(data.message, 3000);
+						//selectForTable();
+						$("#bug-info").modal('hide');
+					} else {
+						console.log(data.message);
+						//失败提示
+						fail_prompt(data.message, 3000);
+						//selectForTable();
+						//$("#bug-info").modal('hide');
+					}
+				}
+			});
+		}
+		//修改
+		function updateById(id) {
+			var bug_name = $("#modal-name").val();
+			var bug_position = $("#modal-position").val();
+			var bug_reason = $("#modal-reason").val();
+			var bug_description = $("#modal-description").val();
+			var bug_type = $("#modal-type").val();
+			var bug_state = $("#modal-state").val();
+			var bug_level = $("#modal-level").val();
+			var bug_frequency = $("#modal-frequency").val();
+			var urlPath = '/updateBUGInfo?id=' + id + '&name=' + bug_name + '&position=' + bug_position + '&reason=' + bug_reason + '&description=' +
+				bug_description + '&type=' + bug_type + '&state=' + bug_state + '&level=' + bug_level + '&frequency=' + bug_frequency;
+			$.ajax({
+				type: "get",
+				url: urlPath,
+				dataType: "json",
+				success: function(data) {
+					if(data.success) {
+						console.log(data.message);
+						success_prompt(data.message, 3000);
+						//selectForTable();
+						$("#bug-info").modal('hide');
+					} else {
+						console.log(data.message);
+						//失败提示
+						fail_prompt(data.message, 3000);
+						//selectForTable();
+						$("#bug-info").modal('hide');
+					}
+				}
+			});
+
+		}
+
+		//显示详细信息
+		function GetBugInfoModal(id) {
+			//("#bug-info").removeClass("fade");
+			modalId = id;
+			$("#modal-id").html(modalId);
+			$("#bug-info").modal('show');
+			$("h4").html("BUG详情");
+			$("#detail-id").removeClass("id-display");
+			$("#label-create").removeClass("id-display");
+			$("#label-resolve").removeClass("id-display");
+			$("#bug-info").removeClass("modal-hidden");
+			//$(".modal-content").load("bug-detail.html");
+			selectById(id);
+		}
+
+		function CreateBugModal() {
+			$("h4").html("BUG新建");
+			$("#bug-info").modal('show');
+			$("#bug-info").removeClass("modal-hidden");
+			$("#detail-id").addClass("id-display");
+			$("#modal-name").removeAttr("disabled");
+			$("#modal-position").removeAttr("disabled");
+			$("#modal-reason").removeAttr("disabled");
+			$("#modal-description").removeAttr("disabled");
+			$("#modal-type").removeAttr("disabled");
+			$("#modal-state").removeAttr("disabled");
+			$("#modal-level").removeAttr("disabled");
+			$("#modal-frequency").removeAttr("disabled");
+			$("#modal-test").removeAttr("disabled");
+			$("#modal-developer").removeAttr("disabled");
+			$("#modal-name").val("");
+			$("#modal-position").val("");
+			$("#modal-reason").val("");
+			$("#modal-description").val("");
+			$("#modal-test").val("");
+			$("#modal-developer").val("");
+			$("#label-create").addClass("id-display");
+			$("#label-resolve").addClass("id-display");
+			setSelectChecked("modal-type", 0);
+			setSelectChecked("modal-state", 0);
+			setSelectChecked("modal-level", 0);
+			setSelectChecked("modal-frequency", 0);
+		}
+		//设置下拉菜单选项
+		function setSelectChecked(selectId, checkValue) {
+			var select = document.getElementById(selectId);
+			for(var i = 0; i < select.options.length; i++) {
+				if(select.options[i].innerHTML == checkValue) {
+					select.options[i].selected = true;
+					break;
+				}
+			}
+		};
+		//类型格式化
+		function TypeFormat(value) {
+			if(value == '0' || value == 0) {
+				value = '<span>UI异常</span>';
+			}
+			if(value == '1' || value == 1) {
+				value = '<span>功能异常</span>';
+			}
+			if(value == '2' || value == 2) {
+				value = '<span>性能异常</span>';
+			}
+			if(value == '9' || value == 9) {
+				value = '<span>其他异常</span>';
+			}
+			return value;
+		}
+		//级别格式化
+		function LevelFormat(value) {
+			if(value == '0' || value == 0) {
+				value = '<span>低优先</span>';
+			}
+			if(value == '1' || value == 1) {
+				value = '<span><font color=\"#006DCC\">中优先</font></span>';
+			}
+			if(value == '2' || value == 2) {
+				value = '<span><font color=\"#FFFF00\">高优先</font></span>';
+			}
+			if(value == '3' || value == 3) {
+				value = '<span><font color=\"red\">严重</font></span>';
+			}
+			return value;
+		}
+		//状态格式化
+		function StateFormat(value) {
+			if(value == '0' || value == 0) {
+				value = '<span>待解决</font</span>';
+			}
+			if(value == '1' || value == 1) {
+				value = '<span>解决中</span>';
+			}
+			if(value == '2' || value == 2) {
+				value = '<span>待确认</span>';
+			}
+			if(value == '3' || value == 3) {
+				value = '<span>解决</span>';
+			}
+			if(value == '9' || value == 9) {
+				value = '<span>作废</span>';
+			}
+			return value;
+		}
+
+		//频率格式化
+		function FrequencyFormat(value) {
+			if(value == '0' || value == 0) {
+				value = '<span>个别</span>';
+			}
+			if(value == '1' || value == 1) {
+				value = '<span>偶尔</span>';
+			}
+			if(value == '2' || value == 2) {
+				value = '<span><font color=\"#FFFF00\">经常</font></span>';
+			}
+			if(value == '3' || value == 3) {
+				value = '<span><font color=\"red\">极其频繁</font></span>';
+			}
+			return value;
+		}
+
+		//日期格式化
+		function DateTimeFormat(value) {
+			if(value.trim() == "0000-00-00 00:00:00" || value.trim() == "" || value == undefined) {
+				return "";
+			} else {
+				var datatime = new Date(new Date(value) + 28800);
+				return datatime.toLocaleString();
+			}
+
+		}
+
+		/**
+		 * 弹出式提示框，默认1.2秒自动消失
+		 * @param message 提示信息
+		 * @param style 提示样式，有alert-success、alert-danger、alert-warning、alert-info
+		 * @param time 消失时间
+		 */
+		var prompt = function(message, style, time) {
+			style = (style === undefined) ? 'alert-success' : style;
+			time = (time === undefined) ? 1200 : time;
+			$('<div>')
+				.appendTo('body')
+				.addClass('alert ' + style)
+				.html(message)
+				.show()
+				.delay(time)
+				.fadeOut();
+		};
+
+		// 成功提示
+		var success_prompt = function(message, time) {
+			prompt(message, 'alert-success', time);
+		};
+
+		// 失败提示
+		var fail_prompt = function(message, time) {
+			prompt(message, 'alert-danger', time);
+		};
+
+		// 提醒
+		var warning_prompt = function(message, time) {
+			prompt(message, 'alert-warning', time);
+		};
+
+		// 信息提示
+		var info_prompt = function(message, time) {
+			prompt(message, 'alert-info', time);
+		};
+
+		function init() {
+			selectForTable();
+		}
+		//初始化
+		init();
+	</script>
+
+</html>

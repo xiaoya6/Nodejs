@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<LINK REL='SHORTCUT ICON' HREF='../img/favicon.ico'>
+		<script src="../js/common/socket.io-1.3.5.js" type="text/javascript"></script>
+		<script src="../js/jquery 3.2.1/jquery-3.2.1.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="../common/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/h5_backend.css" />
+		<script src="../js/tips.js"></script>
+		<title>异常状况紧急处理</title>
+		<style>
+			label {
+				font-size: 30px;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<div id="logo-header">
+			<img src="../img/adi_logo.png" width="10%" />
+			<img src="../img/logo.png" width="20%" />
+		</div>
+		<div id="tip" class="container">
+			<div class="row">
+				<div class="col-12">
+					<span id="title">异常状况紧急处理</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-10">
+				</div>
+				<div class="col-2">
+					<a href="/main" class="btn btn-info">
+						<返回首页</a>
+				</div>
+			</div>
+		</div>
+		<div id="" class="container">
+			<div class="row">
+				<div class="col-12">
+					<h1>清空某城市的某活动的上机状态</h1>
+					<h2 class="warning-text">此功能将清空所有的设备，请谨慎使用！</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<label>城市</label>
+				</div>
+				<div class="col-3">
+					<select id="city" >
+						<option value="上海市 ">上海</option>
+						<option value="成都市 ">成都</option>
+						<option value="广州市 ">广州</option>
+						<option value="北京市 ">北京</option>
+					</select>
+				</div>
+				<div class="col-2 ">
+					<label>活动</label>
+				</div>
+				<div class="col-3 ">
+					<select id="campaign">
+						<option value="篮球 ">篮球</option>
+						<option value="足球 ">足球</option>
+						<option value="跑步 ">跑步</option>
+						<option value="攀岩 ">攀岩</option>
+						<option value="训练 ">训练</option>
+						<option value="A.I.R. Pledge ">A.I.R. Pledge</option>
+						<option value="创造者档案">创造者档案</option>
+					</select>
+				</div>
+				<div class="col-2 ">
+					<button id="btn3" class="h5-btn-little btn btn-info" onclick="UpdateCampaign(); ">清空</button>
+				</div>
+			</div>
+		</div>.
+
+	</body>
+	<script>
+		var tmpstr = this.location.toString().substring(7);
+		//连接websocket后端服务器
+		//http://www.wonderlabsstudio.com:3000/
+		this.socket = io.connect("http://"+tmpstr.substring(0, tmpstr.indexOf("/"))+"/", {
+			transports: ["websocket"]
+		});
+
+
+
+		function UpdateCampaign() {
+			console.log($("#campaign").val() );
+			if(confirm("是否清除" + $("#city").val() + $("#campaign").val() + "设备的上机状态？")) {
+				var data = {
+					campaign: $("#campaign").val(),
+					city: $("#city").val()
+				};
+				socket.emit('UpdateClearCampaignUsing', data);
+			}
+		}
+		socket.on("UpdateClearCampaignUsingCB", function(data) {
+			console.log(data);
+			//$("#span4 ").html(JSON.stringify(data.data));
+
+		});
+	</script>
+
+</html>

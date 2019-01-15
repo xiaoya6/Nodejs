@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<LINK REL='SHORTCUT ICON' HREF='../img/favicon.ico'>
+		<script src="../js/common/socket.io-1.3.5.js" type="text/javascript"></script>
+		<script src="../js/jquery 3.2.1/jquery-3.2.1.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="../common/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/h5_backend.css" />
+		<title>连接监控</title>
+
+	</head>
+
+	<body>
+		<div id="logo-header">
+			<img src="../img/adi_logo.png" width="10%" />
+			<img src="../img/logo.png" width="20%" />
+		</div>
+		<div id="tip" class="container">
+			<div class="row">
+				<div class="col-12">
+					<span id="title">主机连接状况</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-10">
+				</div>
+				<div class="col-2">
+					<a href="/main" class="btn btn-info">
+						<返回首页</a>
+				</div>
+			</div>
+		</div>
+		<div id="tip" class="container">
+			<div class="row">
+				<div class="col-8">
+					<label>选择城市</label>
+				</div>
+				<div class="col-4">
+					<!--<button id="btn1" class="btn btn-info h5-btn" onclick="GetEquipList();">刷&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新</button>-->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-3">
+					<label onclick="ShowCityList();"><input id="SHCB" type="checkbox" class="check-box" checked="checked"/>&nbsp;上海</label>
+				</div>
+				<div class="col-3">
+					<label onclick="ShowCityList();"><input id="BJCB" type="checkbox" class="check-box" checked="checked"/>&nbsp;北京</label>
+				</div>
+				<div class="col-3">
+					<label onclick="ShowCityList();"><input id="GZCB" type="checkbox" class="check-box" checked="checked"/>&nbsp;广州</label>
+				</div>
+				<div class="col-3 form-check">
+					<label onclick="ShowCityList();"><input id="CDCB" type="checkbox" class="check-box" checked="checked"/>&nbsp;成都</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="th2">城市</th>
+								<th class="th3">设备名</th>
+								<th class="th3">最后连接时间</th>
+							</tr>
+						</thead>
+						<tbody id="list">
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		$(function() {
+			$.ajax({
+				type: "get",
+				url: "/GetPCList",
+				dataType: "json",
+				success: function(data) {
+					console.log(data.message);
+					if(data.data) {
+						$.each(data.data, function(infoIndex, info) {
+							var logMessage = "<tr id=\"" + info["id"] + "\" class=\"" + CityFormat(info["city"]) + "\"><td>" + info["city"] + "</td><td>" + info["pcName"] + "</td><td></td></tr>";
+							$("#list").append(logMessage);
+						});
+					} else {
+						alert('失败');
+					}
+				}
+			});
+		});
+
+		function CityFormat(city) {
+			var res = "";
+			if(city == "上海") {
+				res = "shanghai";
+			}
+			if(city == "北京") {
+				res = "beijing";
+			}
+			if(city == "成都") {
+				res = "chengdu";
+			}
+			if(city == "广州") {
+				res = "guangzhou";
+			}
+			return res;
+		}
+		
+		
+		function ShowCityList(){
+			if($("#SHCB").prop('checked')){
+				$(".shanghai").show();
+			}else{
+				$(".shanghai").hide();
+			}
+			if($("#BJCB").prop('checked')){
+				$(".beijing").show();
+			}else{
+				$(".beijing").hide();
+			}
+			if($("#GZCB").prop('checked')){
+				$(".guangzhou").show();
+			}else{
+				$(".guangzhou").hide();
+			}
+			if($("#CDCB").prop('checked')){
+				$(".chengdu").show();
+			}else{
+				$(".chengdu").hide();
+			}
+		}
+		//连接websocket后端服务器
+		//http://www.wonderlabsstudio.com:3000/
+		this.socket = io.connect('http://121.196.222.221:3000/', {
+			transports: ["websocket"]
+		});
+
+
+		socket.on("connectCheckCB", function(data) {
+			//console.log(data);
+			var mydate = new Date();
+			var str = (mydate.getMonth() + 1) + "月";
+			str += mydate.getDate() + "日 ";
+			str += mydate.getHours() + ":";
+			str += mydate.getMinutes() + ":";
+			str += mydate.getSeconds();
+			$("#"+data.id).children("td").eq(2).html(str);
+		});
+	</script>
+
+</html>

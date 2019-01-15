@@ -1,0 +1,12 @@
+.logo-header {
+	box-shadow: 0 5px 10px #777777;
+	width: 100%;
+	background-color: #333333;
+	//position: fixed;
+}
+
+.logo-header img {
+	margin: 1% 0 1% 6%;
+	width: 10%;
+	height: auto;
+}

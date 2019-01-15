@@ -1,0 +1,77 @@
+.table-width {
+	margin-top: 15px;
+	width: 100%;
+}
+
+.table-body {
+	width: 100%;
+	height: 100%;
+	//overflow-y: scroll;
+}
+
+.table-body table {
+	width: 100%;
+}
+
+.table-body table tr:nth-child(2n+1) {
+	background-color: #f2f2f2;
+}
+
+.table-body table tr:nth-child(2n) {
+	background-color: yellow;
+}
+
+img {
+	right: 10px;
+	top: 50px;
+	position: absolute;
+	width: 20%;
+	height: auto;
+}
+
+body {
+	background-color: black;
+}
+
+th {
+	font-size: xx-large;
+	background-color: blue;
+	color: #000;
+}
+
+td {
+	font-size: xx-large;
+	text-align: center
+}
+
+h1 {
+	font-size: 60px;
+	color: white;
+	margin-bottom: 5px;
+}
+
+#tip {
+	font-size: 25px;
+	color: red;
+}
+
+#timeShow {
+	color: white;
+	font-size: 25px;
+}
+
+#th1{
+	width: 10%;
+}
+#th2{
+	width: 25%;
+}
+
+#th3{
+	width: 25%;
+}
+
+#th4{
+	width: 40%;
+}
+
